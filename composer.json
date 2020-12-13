@@ -1,0 +1,21 @@
+{
+    "name": "accolon/cli",
+    "description": "Library cli",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jvrcavalcanti",
+            "email": "jonnyvictor01@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Accolon\\Cli\\": "src/"
+        }
+    },
+    "require": {
+        "accolon/container": "^1.0"
+    }
+}
