@@ -1,6 +1,6 @@
 <?php
 
-use Accolon\Cli\App;
+use Accolon\Cli\Console;
 use Accolon\Cli\Command;
 use Accolon\Cli\Event;
 
@@ -23,10 +23,10 @@ class ListCommand extends Command
     }
 }
 
-App::setContainer();
+Console::setContainer();
 
-App::addCommands([
+Console::addCommands([
     ListCommand::class
 ]);
 
-App::run(true, $argv);
+Console::run(true, $argv);

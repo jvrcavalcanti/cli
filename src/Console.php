@@ -4,7 +4,7 @@ namespace Accolon\Cli;
 
 use Accolon\Container\Container;
 
-class App
+class Console
 {
     /**
      * @var Command[] $commands
