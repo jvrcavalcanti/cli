@@ -10,7 +10,7 @@ class Console
      * @var Command[] $commands
      */
     private static array $commands = [];
-    private static ?Container $container = null;
+    private static Container $container;
 
     public static function setContainer(?Container $container = null)
     {
@@ -31,7 +31,7 @@ class Console
             return $carry;
         }, []);
 
-        $command->make($keys, $newParams);
+        return $command->make($keys, $newParams);
     }
 
     public static function addCommand(string $command)
@@ -43,6 +43,25 @@ class Console
     {
         foreach ($commands as $command) {
             static::addCommand($command);
+        }
+    }
+
+    public static function addDirectory(string $path, string $namespace)
+    {
+        $files = scandir($path);
+        $files = array_splice($files, 2);
+        $files = array_filter($files, fn($file) => str_contains($file, '.php') || is_dir("{$path}/{$file}"));
+
+        foreach ($files as $file) {
+            if (is_dir("{$path}/{$file}")) {
+                static::addDirectory("{$path}/{$file}", "{$namespace}\\{$file}");
+                continue;
+            }
+            require_once "{$path}/{$file}";
+
+            $shortName = explode('.', $file)[0];
+            $fullName = "{$namespace}\\{$shortName}";
+            static::addCommand($fullName);
         }
     }
 
@@ -63,13 +82,13 @@ class Console
         
         foreach (static::$commands as $command) {
             if (preg_match_all("#{$command->getSignature()}#", $subject, $keys)) {
-                static::resolveHandleCommand($command, array_splice($keys, 1));
+                $result = static::resolveHandleCommand($command, array_splice($keys, 1));
                 
                 if ($time) {
                     static::printTime($start);
                 }
 
-                exit;
+                return $result;
             }
         }
         

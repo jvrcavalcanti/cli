@@ -1,8 +1,6 @@
 <?php
 
 use Accolon\Cli\Console;
-use Accolon\Cli\Command;
-use Accolon\Cli\Event;
 
 require_once './vendor/autoload.php';
 
@@ -12,21 +10,8 @@ function dd($var)
     exit;
 }
 
-class ListCommand extends Command
-{
-    protected string $signature = 'list {dir} {file}';
-    protected string $description = 'List nothing';
-
-    public function handle(Event $event)
-    {
-        var_dump($this->argument('file'));
-    }
-}
-
 Console::setContainer();
 
-Console::addCommands([
-    ListCommand::class
-]);
+Console::addDirectory(__DIR__ . '/Commands', 'App\Commands');
 
-Console::run(true, $argv);
+echo Console::run(true, $argv);
