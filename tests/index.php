@@ -3,6 +3,7 @@
 use Accolon\Cli\Console;
 
 require_once './vendor/autoload.php';
+require_once './tests/Commands/ListCommand.php';
 
 function dd($var)
 {
@@ -12,6 +13,7 @@ function dd($var)
 
 Console::setContainer();
 
-Console::addDirectory(__DIR__ . '/Commands', 'App\Commands');
+Console::loadCommands();
 
+// Console::addDirectory(__DIR__ . '/Commands', 'App\Commands');
 echo Console::run(true, $argv);

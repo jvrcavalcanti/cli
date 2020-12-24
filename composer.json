@@ -15,6 +15,11 @@
             "Accolon\\Cli\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Commands\\": "tests/Commands"
+        }
+    },
     "require": {
         "accolon/container": "^1.0"
     }
