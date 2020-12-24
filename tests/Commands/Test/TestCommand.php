@@ -10,6 +10,6 @@ class TestCommand extends Command
 
     public function handle()
     {
-        return 'Hihi' . PHP_EOL;
+        echo 'Hihi' . PHP_EOL;
     }
 }

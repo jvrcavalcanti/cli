@@ -7,7 +7,7 @@ use Accolon\Container\Container;
 class Console
 {
     /**
-     * @var CommandHandler[] $commands
+     * @var Command[] $commands
      */
     private static array $commands = [];
     private static Container $container;
@@ -17,7 +17,13 @@ class Console
         static::$container = $container ?? new Container;
     }
 
-    public static function resolveHandleCommand(CommandHandler $command, array $keys)
+    public static function init()
+    {
+        static::setContainer();
+        static::loadCommands();
+    }
+
+    public static function resolveHandleCommand(Command $command, array $keys)
     {
         $reflectionClass = $command->getReflectionClass();
 
@@ -66,10 +72,7 @@ class Console
         $classes = static::getDeclaredClasses();
 
         foreach ($classes as $class) {
-            $reflectionClass = new \ReflectionClass($class);
-            $isCommand = (bool) count($reflectionClass->getAttributes(Command::class));
-
-            if ($isCommand) {
+            if (is_subclass_of($class, Command::class)) {
                 static::addCommand($class);
             }
         }
@@ -89,9 +92,12 @@ class Console
         static::$container->singletons(Event::class, $event);
 
         $start = microtime(true);
+
+        $cleanSubject = rtrim(preg_replace("#((-){1,}[a-zA-Z]{1,})#", "", $subject));
         
         foreach (static::$commands as $command) {
-            if (preg_match_all("#{$command->getSignature()}#", $subject, $keys)) {
+            if (preg_match_all("#{$command->getSignature()}#", $cleanSubject, $keys)) {
+                $command->setSubject($subject);
                 $result = static::resolveHandleCommand($command, array_splice($keys, 1));
                 
                 if ($time) {
