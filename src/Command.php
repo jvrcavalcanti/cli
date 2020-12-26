@@ -65,4 +65,14 @@ abstract class Command
 
         return $this->args[array_keys($this->keys, $name)[0]];
     }
+
+    public function flag(string $name): ?string
+    {
+        return preg_match("#({$name}) (.+)#", $this->subject, $matches) ? $matches[2] : null;
+    }
+
+    public function hasFlag(string $name): bool
+    {
+        return preg_match("#{$name}#", $this->subject, $matches);
+    }
 }

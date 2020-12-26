@@ -12,6 +12,7 @@ class ListCommand extends Command
 
     public function handle(Event $event)
     {
-        var_dump($this);
+        throw new \Exception(':(');
+        var_dump($this->hasFlag('--version'));
     }
 }

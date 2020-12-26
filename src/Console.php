@@ -98,13 +98,18 @@ class Console
         foreach (static::$commands as $command) {
             if (preg_match_all("#{$command->getSignature()}#", $cleanSubject, $keys)) {
                 $command->setSubject($subject);
-                $result = static::resolveHandleCommand($command, array_splice($keys, 1));
                 
-                if ($time) {
-                    static::printTime($start);
-                }
+                try {
+                    static::resolveHandleCommand($command, array_splice($keys, 1));
+                } catch (\Exception $e) {
+                    echo 'Error: ' . $e->getMessage() . PHP_EOL;
+                } finally {
+                    if ($time) {
+                        static::printTime($start);
+                    }
 
-                return $result;
+                    return;
+                }
             }
         }
         
