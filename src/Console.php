@@ -100,19 +100,25 @@ class Console
                 $command->setSubject($subject);
                 
                 try {
-                    static::resolveHandleCommand($command, array_splice($keys, 1));
-                } catch (\Exception $e) {
-                    echo 'Error: ' . $e->getMessage() . PHP_EOL;
-                } finally {
+                    $result = static::resolveHandleCommand($command, array_splice($keys, 1));
+
                     if ($time) {
                         static::printTime($start);
                     }
 
-                    return;
+                    return $result;
+                } catch (\Exception $e) {
+                    $data = $e->getTrace()[0];
+                    echo 'Error Exception' . PHP_EOL;
+                    echo 'Message: ' . $e->getMessage() . PHP_EOL;
+                    echo 'File: ' . $data['file'] . PHP_EOL;
+                    echo 'Line: ' . $data['line'] . PHP_EOL;
+                    return null;
                 }
             }
         }
         
         echo 'Command not found' . PHP_EOL;
+        return null;
     }
 }

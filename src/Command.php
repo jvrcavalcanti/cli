@@ -2,6 +2,8 @@
 
 namespace Accolon\Cli;
 
+use Accolon\Cli\Exceptions\ValidatorException;
+
 abstract class Command
 {
     private array $keys = [];
@@ -74,5 +76,14 @@ abstract class Command
     public function hasFlag(string $name): bool
     {
         return preg_match("#{$name}#", $this->subject, $matches);
+    }
+
+    protected function validator(array $flags)
+    {
+        foreach ($flags as $flag) {
+            if (!$this->hasFlag($flag)) {
+                throw new ValidatorException("Flag [{$flag}] isn't");
+            }
+        }
     }
 }
