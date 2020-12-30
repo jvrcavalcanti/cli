@@ -20,7 +20,6 @@ class Console
     public static function init()
     {
         static::setContainer();
-        static::loadCommands();
     }
 
     public static function resolveHandleCommand(Command $command, array $keys)
