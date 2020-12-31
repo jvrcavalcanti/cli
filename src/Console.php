@@ -92,7 +92,7 @@ class Console
 
         $start = microtime(true);
 
-        $cleanSubject = rtrim(preg_replace("#((-){1,}[a-zA-Z]{1,})#", "", $subject));
+        $cleanSubject = rtrim(preg_replace("#^((-){1,}[a-zA-Z]{1,})$#", "", $subject));
         
         foreach (static::$commands as $command) {
             if (preg_match_all("#{$command->getSignature()}#", $cleanSubject, $keys)) {
