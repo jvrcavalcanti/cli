@@ -51,6 +51,25 @@ class Console
         }
     }
 
+    public static function addDirectory(string $path, string $namespace)
+    {
+        $files = scandir($path);
+        $files = array_splice($files, 2);
+        $files = array_filter($files, fn($file) => strpos('.php', $file) !== false || is_dir("{$path}/{$file}"));
+
+        foreach ($files as $file) {
+            if (is_dir("{$path}/{$file}")) {
+                static::addDirectory("{$path}/{$file}", "{$namespace}\\{$file}");
+                continue;
+            }
+            require_once "{$path}/{$file}";
+
+            $shortName = explode('.', $file)[0];
+            $fullName = "{$namespace}\\{$shortName}";
+            static::addCommand($fullName);
+        }
+    }
+
     public static function printTime($start)
     {
         echo 'Runtime: ' . substr((microtime(true) - $start), 0, 10) . 'ms' . PHP_EOL;
@@ -92,7 +111,15 @@ class Console
 
         $start = microtime(true);
 
-        $cleanSubject = rtrim(preg_replace("#^((-){1,}[a-zA-Z]{1,})$#", "", $subject));
+        $cleanSubject = '';
+
+        foreach (explode(' ', $subject) as $arg) {
+            if (!preg_match('#^-[a-zA-Z]{1,}$#', $arg)) {
+                $cleanSubject .= $arg . ' ';
+            }
+        }
+
+        $cleanSubject = rtrim($cleanSubject);
         
         foreach (static::$commands as $command) {
             if (preg_match_all("#{$command->getSignature()}#", $cleanSubject, $keys)) {

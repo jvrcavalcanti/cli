@@ -15,5 +15,5 @@ function dd($var)
 Console::init();
 Console::loadCommands();
 
-// Console::addDirectory(__DIR__ . '/Commands', 'App\Commands');
+Console::addDirectory(__DIR__ . '/Commands', 'App\Commands');
 echo Console::run(true, $argv);

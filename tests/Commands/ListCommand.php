@@ -12,8 +12,15 @@ class ListCommand extends Command
 
     public function handle(Event $event)
     {
-        $this->validator([
-            '-r'
-        ]);
+        if ($this->hasFlag('-r')) {
+            echo 'Recursive list' . PHP_EOL;
+        }
+
+        $tmp = scandir($this->argument('dir'));
+        $files = array_splice($tmp, 2);
+
+        foreach ($files as $file) {
+            echo "File -> {$file}" . PHP_EOL;
+        }
     }
 }
